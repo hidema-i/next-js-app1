@@ -18,5 +18,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "reactstrap": "^9.1.2"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.2"
   }
 }

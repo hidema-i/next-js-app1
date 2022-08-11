@@ -11,6 +11,7 @@ import Link from "next/link";
 import { gql } from "apollo-boost";
 import { useQuery } from "@apollo/react-hooks";
 import { useRouter } from "next/router";
+import Cart from "./components/Cart";
 
 const GET_RESTAURANT_DISHES = gql`
   query ($id: ID!) {
@@ -84,6 +85,13 @@ const Restaurants = (props) => {
               }
             `}
           </style>
+
+          {/* cart */}
+          <Col xs="3" style={{ padding: 0 }}>
+            <div>
+              <Cart />
+            </div>
+          </Col>
         </Row>
       </>
     );
