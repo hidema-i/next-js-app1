@@ -17,7 +17,7 @@ class MyApp extends App {
     const token = Cookies.get("token");
     const cart = Cookies.get("cart");
 
-    console.log(cart);
+    //console.log(cart);
 
     //注文した後に実装するといいね。
     if (cart !== "undefined" && typeof cart === "string") {
@@ -62,7 +62,7 @@ class MyApp extends App {
     //オブジェクトの分割代入
     let { items } = this.state.cart;
     const newItem = items.find((i) => i.id === item.id);
-    // console.log(newItem);
+    console.log(newItem);
     //もしすでにカートに入ってる商品があるなら
     if (!newItem) {
       item.quantity = 1;
@@ -96,7 +96,7 @@ class MyApp extends App {
       );
     }
   };
-
+  //Cartから商品削除
   removeItem = (item) => {
     let { items } = this.state.cart; //現在のカート状態。
     const newItem = items.find((i) => i.id === item.id);
@@ -114,6 +114,7 @@ class MyApp extends App {
         },
         () => Cookies.set("cart", this.state.items)
       );
+      //Cartに入っているその商品が１つの場合
     } else {
       //注文数が1のときは注文を削除する。
       const items = [...this.state.cart.items];
