@@ -1,35 +1,51 @@
-import { FormGroup, Input, Label } from "reactstrap";
-import CardSection from "./CardSection";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import Cookies from "js-cookie";
-import AppContext from "../../context/AppContext";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
+import { FormGroup, Label, Input } from "reactstrap";
+import AppContext from "../../../context/AppContext";
+import CardSection from "./CardSection";
 
-const CheckOutForm = () => {
+const CheckoutForm = () => {
   const [data, setData] = useState({
     address: "",
     stripe_id: "",
   });
+  const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const stripe = useStripe();
+  const elements = useElements();
+  const appContext = useContext(AppContext);
 
   const handleChange = (e) => {
     const updateItem = (data[e.target.name] = e.target.value);
+    //更新した商品情報を追加
     setData({ ...data, updateItem });
   };
 
-  const appContext = useContext(AppContext);
   //注文を確定させる関数
-  const userToken = Cookies.get("token");
   const submitOrder = async () => {
-    const responce = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+    const cardElement = elements.getElement(CardElement);
+    const token = await stripe.createToken(cardElement);
+    // console.log(token);
+    const userToken = Cookies.get("token");
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
       method: "POST",
       headers: userToken && {
         Authorization: `Bearer ${userToken}`,
       },
       body: JSON.stringify({
-        amount: Number(appContext.cart.total),
+        amount: Number(Math.round(appContext.cart.total)),
         dishes: appContext.cart.items,
         address: data.address,
+        token: token.token.id,
       }),
     });
+
+    if (response.ok) {
+      setSuccessMsg("注文成功");
+    } else {
+      setError("注文失敗");
+    }
   };
 
   return (
@@ -43,7 +59,12 @@ const CheckOutForm = () => {
         </div>
       </FormGroup>
 
-      <CardSection />
+      <CardSection
+        submitOrder={submitOrder}
+        stripeError={error}
+        stripeSuccess={successMsg}
+      />
+
       <style jsx global>
         {`
           .paper {
@@ -159,4 +180,4 @@ const CheckOutForm = () => {
   );
 };
 
-export default CheckOutForm;
+export default CheckoutForm;

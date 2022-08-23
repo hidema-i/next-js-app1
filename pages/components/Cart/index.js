@@ -2,7 +2,6 @@ import Link from "next/link";
 import { useContext } from "react";
 import { Badge, Button, Card, CardBody, CardTitle } from "reactstrap";
 import AppContext from "../../../context/AppContext";
-
 const Cart = () => {
   const appContext = useContext(AppContext);
 
@@ -31,7 +30,11 @@ const Cart = () => {
               ? cart.items.map((item) => {
                   if (item.quantity > 0) {
                     return (
-                      <div className="items-one" style={{ marginButtom: 15 }}>
+                      <div
+                        className="items-one"
+                        style={{ marginButtom: 15 }}
+                        key={item.id}
+                      >
                         <div>
                           <span id="item-price">&nbsp; {item.price}円</span>
                           <span id="item-name">&nbsp; {item.name}</span>

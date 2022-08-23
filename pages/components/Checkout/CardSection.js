@@ -1,21 +1,33 @@
 import { CardElement } from "@stripe/react-stripe-js";
 
-const CardSection = () => {
+const CardSection = (props) => {
   return (
     <div>
       <div>
-        <label htmlFor="card-element">クレジットカード/デビットカード</label>
+        <label htmlFor="card-element">クレジット/デビットカード</label>
 
         <div>
           <fieldset>
             <div className="form-row">
               <div id="card-element" style={{ width: "100%" }}>
-                <CardElement />
+                <CardElement
+                  options={{
+                    style: { width: "100%", base: { fontSize: "18px" } },
+                  }}
+                />
               </div>
               <br />
               <div className="order-button-wrapper">
-                <button>注文を確認</button>
+                <button onClick={props.submitOrder}>注文を確認</button>
               </div>
+              {/* ストライプエラー */}
+              {props.stripeError ? (
+                <div>{props.stripeError.toString()}</div>
+              ) : null}
+
+              {props.stripeSuccess ? (
+                <div color="green">{props.stripeSuccess.toString()}</div>
+              ) : null}
             </div>
           </fieldset>
         </div>
